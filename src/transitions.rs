@@ -27,8 +27,7 @@ impl Transitions {
             .get::<TransitionOptions>(
                 "api",
                 &format!("/issue/{}/transitions?expand=transitions.fields", self.key),
-            )
-            .map(|wrapper| wrapper.transitions)
+            ).map(|wrapper| wrapper.transitions)
     }
 
     /// trigger a issue transition
@@ -39,8 +38,7 @@ impl Transitions {
                 "api",
                 &format!("/issue/{}/transitions", self.key),
                 trans,
-            )
-            .or_else(|e| match e {
+            ).or_else(|e| match e {
                 Error::Serde(_) => Ok(()),
                 e => Err(e),
             })
