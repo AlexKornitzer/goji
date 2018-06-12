@@ -5,6 +5,7 @@ use url::form_urlencoded;
 
 // Ours
 use crate::{Board, Issue, Jira, Result, SearchOptions};
+use std::collections::BTreeMap;
 
 /// issue options
 #[derive(Debug)]
@@ -40,15 +41,24 @@ pub struct Component {
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Fields {
-    pub assignee: Assignee,
-    pub components: Vec<Component>,
-    pub description: String,
-    pub environment: String,
     pub issuetype: IssueType,
-    pub priority: Priority,
     pub project: Project,
     pub reporter: Assignee,
     pub summary: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub assignee: Option<Assignee>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub components: Option<Vec<Component>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub environment: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub priority: Option<Priority>,
+
+    #[serde(flatten)]
+    pub custom: BTreeMap<String, String>,
 }
 
 #[derive(Serialize, Debug)]

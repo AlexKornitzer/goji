@@ -154,7 +154,6 @@ impl Jira {
         let mut body = String::new();
         res.read_to_string(&mut body)?;
         debug!("status {:?} body '{:?}'", res.status(), body);
-        println!("status {:?} body '{:?}'", res.status(), body);
         match res.status() {
             StatusCode::UNAUTHORIZED => Err(Error::Unauthorized),
             StatusCode::METHOD_NOT_ALLOWED => Err(Error::MethodNotAllowed),
