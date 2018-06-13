@@ -39,6 +39,11 @@ pub struct Component {
 }
 
 #[derive(Serialize, Debug)]
+pub struct Custom {
+    pub value: String,
+}
+
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Fields {
     pub issuetype: IssueType,
@@ -55,10 +60,12 @@ pub struct Fields {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub environment: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub labels: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub priority: Option<Priority>,
 
     #[serde(flatten)]
-    pub custom: BTreeMap<String, String>,
+    pub custom: BTreeMap<String, Custom>,
 }
 
 #[derive(Serialize, Debug)]
