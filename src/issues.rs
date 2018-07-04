@@ -20,7 +20,7 @@ pub struct Assignee {
 
 #[derive(Serialize, Debug, Clone)]
 pub struct IssueType {
-    pub id: String,
+    pub name: String,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -48,7 +48,8 @@ pub struct Custom {
 pub struct Fields {
     pub issuetype: IssueType,
     pub project: Project,
-    pub reporter: Assignee,
+    // XXX: Is this admin only, this is autoset by the 'logged on' user
+    // pub reporter: Assignee,
     pub summary: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
