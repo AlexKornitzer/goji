@@ -1,6 +1,7 @@
 //! Interfaces for accessing and managing issues
 
 // Third party
+use serde_json;
 use url::form_urlencoded;
 
 // Ours
@@ -39,11 +40,6 @@ pub struct Component {
 }
 
 #[derive(Serialize, Debug)]
-pub struct Custom {
-    pub value: String,
-}
-
-#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Fields {
     pub issuetype: IssueType,
@@ -66,7 +62,7 @@ pub struct Fields {
     pub priority: Option<Priority>,
 
     #[serde(flatten)]
-    pub custom: BTreeMap<String, Custom>,
+    pub custom: BTreeMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Debug)]
