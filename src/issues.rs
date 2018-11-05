@@ -66,6 +66,12 @@ pub struct Fields {
 }
 
 #[derive(Serialize, Debug)]
+pub struct Comment {
+    pub body: String,
+    pub visibility: Option<Visibility>,
+}
+
+#[derive(Serialize, Debug)]
 pub struct CreateIssue {
     pub fields: Fields,
 }
@@ -173,5 +179,21 @@ impl<'a> Iterator for IssuesIter<'a> {
                 None
             }
         })
+    }
+    pub fn comment<I>(&self, id: I, comment: Comment) -> Result<CommentResponse>
+    where
+        I: Into<String>,
+    {
+        self.jira
+            .post(&format!("/issue/{}/comment", id.into()), comment)
+    }
+    pub fn update<I>(&self, id: I, fields: Fields) -> Result<()>
+    where
+        I: Into<String>,
+    {
+        self.jira.put(
+            &format!("/issue/{}", id.into()),
+            json!({ "fields": fields }),
+        )
     }
 }

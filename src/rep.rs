@@ -185,7 +185,7 @@ pub struct Comment {
     pub visibility: Option<Visibility>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Visibility {
     #[serde(rename = "type")]
     pub visibility_type: String,
@@ -349,7 +349,10 @@ impl TransitionTriggerOptions {
         I: Into<String>,
     {
         TransitionTriggerOptions {
-            transition: Transition { id: id.into() },
+            transition: Transition {
+                id: id.into(),
+                name: String::from(""),
+            },
             fields: BTreeMap::new(),
         }
     }
@@ -374,7 +377,10 @@ impl TransitionTriggerOptionsBuilder {
         I: Into<String>,
     {
         TransitionTriggerOptionsBuilder {
-            transition: Transition { id: id.into() },
+            transition: Transition {
+                id: id.into(),
+                name: String::from(""),
+            },
             fields: BTreeMap::new(),
         }
     }
@@ -417,4 +423,6 @@ pub struct Resolution {
 #[derive(Serialize, Clone, Debug)]
 pub struct Transition {
     pub id: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub name: String,
 }

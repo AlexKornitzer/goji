@@ -6,6 +6,7 @@ extern crate reqwest;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
 extern crate serde_json;
 extern crate url;
 
@@ -117,6 +118,16 @@ impl Jira {
         let data = serde_json::to_string::<S>(&body)?;
         debug!("Json request: {}", data);
         self.request::<D>(Method::POST, api_name, endpoint, Some(data.into_bytes()))
+    }
+
+    fn put<D, S>(&self, api_name: &str, endpoint: &str, body: S) -> Result<D>
+    where
+        D: DeserializeOwned,
+        S: Serialize,
+    {
+        let data = try!(serde_json::to_string::<S>(&body));
+        debug!("Json request: {}", data);
+        self.request::<D>(Method::PUT, api_name, endpoint, Some(data.into_bytes()))
     }
 
     fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
