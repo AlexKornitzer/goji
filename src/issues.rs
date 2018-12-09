@@ -5,7 +5,8 @@ use serde_json;
 use url::form_urlencoded;
 
 // Ours
-use crate::{Board, Issue, Jira, Result, SearchOptions};
+use crate::rep::Comment as CommentResponse;
+use crate::{Board, Issue, Jira, Result, SearchOptions, Visibility};
 use std::collections::BTreeMap;
 
 /// issue options
@@ -109,6 +110,23 @@ impl Issues {
     pub fn create(&self, data: CreateIssue) -> Result<CreateResponse> {
         self.jira.post("api", "/issue", data)
     }
+    pub fn comment<I>(&self, id: I, comment: Comment) -> Result<CommentResponse>
+    where
+        I: Into<String>,
+    {
+        self.jira
+            .post(&format!("/issue/{}/comment", id.into()), "api", comment)
+    }
+    pub fn update<I>(&self, id: I, fields: Fields) -> Result<()>
+    where
+        I: Into<String>,
+    {
+        self.jira.put(
+            &format!("/issue/{}", id.into()),
+            "api",
+            json!({ "fields": fields }),
+        )
+    }
 
     /// returns a single page of issues results
     /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard
@@ -179,21 +197,5 @@ impl<'a> Iterator for IssuesIter<'a> {
                 None
             }
         })
-    }
-    pub fn comment<I>(&self, id: I, comment: Comment) -> Result<CommentResponse>
-    where
-        I: Into<String>,
-    {
-        self.jira
-            .post(&format!("/issue/{}/comment", id.into()), comment)
-    }
-    pub fn update<I>(&self, id: I, fields: Fields) -> Result<()>
-    where
-        I: Into<String>,
-    {
-        self.jira.put(
-            &format!("/issue/{}", id.into()),
-            json!({ "fields": fields }),
-        )
     }
 }
