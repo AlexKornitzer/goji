@@ -115,15 +115,15 @@ impl Issues {
         I: Into<String>,
     {
         self.jira
-            .post(&format!("/issue/{}/comment", id.into()), "api", comment)
+            .post("api", &format!("/issue/{}/comment", id.into()), comment)
     }
     pub fn update<I>(&self, id: I, fields: Fields) -> Result<()>
     where
         I: Into<String>,
     {
         self.jira.put(
-            &format!("/issue/{}", id.into()),
             "api",
+            &format!("/issue/{}", id.into()),
             json!({ "fields": fields }),
         )
     }
